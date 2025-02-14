@@ -38,6 +38,35 @@ public class SpotifyController {
         this.webClient = webClientBuilder.baseUrl("https://accounts.spotify.com").build();
     }
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> getSpotifyRefreshToken(@RequestBody Map<String,String> requestBody) throws IOException{
+        String token = requestBody.get("refresh_token");
+
+        OkHttpClient client = new OkHttpClient();
+
+        // Codificação Base64 do client_id e client_secret
+        String base64Auth = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
+
+        okhttp3.RequestBody body = new FormBody.Builder()
+                .add("refresh_token", token)
+                .add("grant_type", "refresh_token")
+                .build();
+
+        Request request = new Request.Builder()
+                .url("https://accounts.spotify.com/api/token") // API do Spotify
+                .post(body)
+                .addHeader("Authorization", "Basic " + base64Auth)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
+        }
+    }
+
     @PostMapping("/token")
     public ResponseEntity<?> getSpotifyToken ( @RequestBody Map<String, String> requestBody) throws IOException {
         String code = requestBody.get("code"); // Código enviado pelo frontend
@@ -187,6 +216,7 @@ public class SpotifyController {
             return ResponseEntity.ok(response.body().string());
         }
     }
+
 
 
     @GetMapping("/search")
