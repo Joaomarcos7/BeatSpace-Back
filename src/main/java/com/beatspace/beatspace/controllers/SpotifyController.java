@@ -151,13 +151,31 @@ public class SpotifyController {
         }
     }
 
-    @GetMapping("/user/current")
+    @GetMapping("/user/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) throws IOException{
 
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url("https://api.spotify.com/v1/me") // API do Spotify
+                .get()
+                .addHeader("Authorization",token)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
+        }
+    }
+
+    @GetMapping("user/me/playlists")
+    public ResponseEntity<?> getCurrentUserPlaylists(@RequestHeader("Authorization") String token) throws IOException{
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/playlists") // API do Spotify
                 .get()
                 .addHeader("Authorization",token)
                 .build();
@@ -198,5 +216,60 @@ public class SpotifyController {
                     return ResponseEntity.ok(response.body().string());
                 }
             }
+
+
+            @GetMapping("albums/{id}")
+            public ResponseEntity<?> GetAlbum(@PathVariable("id") String id, @RequestHeader("Authorization") String token) throws IOException{
+                OkHttpClient client = new OkHttpClient();
+                // Criando a URL com query parameters
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme("https") // Protocolo (http ou https)
+                        .host("api.spotify.com") // Host
+                        .addPathSegment("v1")
+                        .addPathSegment("albums")
+                        .addPathSegment(id)
+                        .build();
+
+                Request request = new Request.Builder()
+                        .url(url) // API do Spotify
+                        .get()
+                        .addHeader("Authorization",token)
+                        .build();
+
+
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) {
+                        return ResponseEntity.status(response.code()).body(response.body().string());
+                    }
+                    return ResponseEntity.ok(response.body().string());
+                }
+            }
+
+    @GetMapping("tracks/{id}")
+    public ResponseEntity<?> GetTrack(@PathVariable("id") String id, @RequestHeader("Authorization") String token) throws IOException{
+        OkHttpClient client = new OkHttpClient();
+        // Criando a URL com query parameters
+        HttpUrl url = new HttpUrl.Builder()
+                .scheme("https") // Protocolo (http ou https)
+                .host("api.spotify.com") // Host
+                .addPathSegment("v1")
+                .addPathSegment("tracks")
+                .addPathSegment(id)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url) // API do Spotify
+                .get()
+                .addHeader("Authorization",token)
+                .build();
+
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
+        }
+    }
 
 }
