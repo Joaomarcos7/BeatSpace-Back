@@ -29,4 +29,6 @@ public class ComentarioService {
     public void deletar(Long id) {
         comentarioRepository.deleteById(id);
     }
+
+    public List<Comentario> buscarporParentId(String id){return comentarioRepository.findByParentId(id);}
 }

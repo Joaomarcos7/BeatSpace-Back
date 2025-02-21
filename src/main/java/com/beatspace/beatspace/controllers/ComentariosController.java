@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,15 @@ public class ComentariosController {
         Optional<Comentario> comentario = comentarioService.buscarPorId(id);
         return comentario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+    @GetMapping("/parent/{id}")
+    public ResponseEntity<List<Comentario>> getComentariosByAlbumOrPlaylist(@PathVariable String id) {
+        List<Comentario> comentarios = comentarioService.buscarporParentId(id);
+        return ResponseEntity.ok(comentarios);
+    }
+
+
 
     @PostMapping
     public Comentario salvar(@RequestBody Comentario comentario) {
