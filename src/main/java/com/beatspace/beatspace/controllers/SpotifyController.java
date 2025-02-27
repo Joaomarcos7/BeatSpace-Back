@@ -159,6 +159,26 @@ public class SpotifyController {
         }
     }
 
+    @DeleteMapping("/albuns/remove")
+    public ResponseEntity<?> removeAlbunsSaved(@RequestHeader("Authorization") String token,@RequestBody String saveAlbumRequest) throws IOException{
+
+
+        okhttp3.RequestBody requestBody = okhttp3.RequestBody.create(saveAlbumRequest,MediaType.get("application/json"));
+
+        Request request = new Request.Builder()
+                .url("https://api.spotify.com/v1/me/albums") // API do Spotify
+                .delete(requestBody)
+                .addHeader("Authorization",token)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
+        }
+    }
+
 
     @GetMapping("/tracks/top")
     public ResponseEntity<?> getMyTopTracks(@RequestHeader("Authorization") String token) throws IOException{
