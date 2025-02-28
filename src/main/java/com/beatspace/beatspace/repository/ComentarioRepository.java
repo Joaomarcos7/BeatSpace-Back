@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
     public List<Comentario> findByParentId(String id);
+
 }
