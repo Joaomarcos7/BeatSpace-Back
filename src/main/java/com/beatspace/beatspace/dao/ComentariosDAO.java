@@ -1,6 +1,6 @@
 package com.beatspace.beatspace.dao;
 
-import com.beatspace.beatspace.models.Comentario;
+import com.beatspace.beatspace.models.Comentarios.Comentario;
 
 import java.util.ArrayList;
 import java.util.List;
