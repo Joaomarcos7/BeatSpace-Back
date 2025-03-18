@@ -1,22 +1,17 @@
-package com.beatspace.beatspace.models;
+package com.beatspace.beatspace.models.Comentarios;
 
+import com.beatspace.beatspace.models.Like;
+import com.beatspace.beatspace.models.dto.ResenhaResponse;
 import jakarta.persistence.*;
-import lombok.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
-import java.util.Locale;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "comentarios")
-public class Comentario {
+@Table(name = "resenhas")
+public class Resenha {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +30,7 @@ public class Comentario {
     private String userimg;
 
     @Column(nullable = false)
-    private int nota;
+    private double nota;
 
     @Column(nullable = false)
     private String data;
@@ -43,13 +38,24 @@ public class Comentario {
     @Column(nullable=false)
     private String parentId;
 
+    @OneToMany(mappedBy = "resenha", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    @OneToMany(mappedBy = "resenha", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
+
 
 
 
     // Construtor padrão
-    public Comentario() {}
+    public Resenha() {}
 
-    public Comentario(String texto, String autor,int nota,String data ,String parentId, String username, String userimg){
+    public Resenha(String parentId,double nota){
+        this.parentId=parentId;
+        this.nota = nota;
+    }
+
+    public Resenha(String texto, String autor,int nota,String data ,String parentId, String username, String userimg){
         this.ValidarTamanhodoTexto(texto);
         this.ValidarFaixaDaNota(nota);
         this.ValidarFormatoData(data);
@@ -62,7 +68,33 @@ public class Comentario {
         this.username = username;
     }
 
+    // Método para converter Resenha em ResenhaRecord
+    public ResenhaResponse toResenhaResponse() {
+        return new ResenhaResponse(
+                this.id,
+                this.texto,
+                this.autor,
+                this.username,
+                this.userimg,
+                this.nota,
+                this.data,
+                this.parentId,
+                this.comentarios.stream().map(x->x.toComentarioResponse()).toList(),
+                this.likes != null ? this.likes.size() : 0 ,// Total de likes,
+                this.getLikes().stream().filter(x-> x.getUserId().equals(this.autor)).toList().size() > 0
+        );
+    }
+
     // Getters e Setters
+
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
 
     // Getter para 'username'
     public String getUsername() {
@@ -109,6 +141,14 @@ public class Comentario {
         this.texto = texto;
     }
 
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
     public String getAutor() {
         return autor;
     }
@@ -117,11 +157,11 @@ public class Comentario {
         this.autor = autor;
     }
 
-    public int getNota() {
+    public double getNota() {
         return nota;
     }
 
-    public void setNota(int nota) {
+    public void setNota(double nota) {
         this.ValidarFaixaDaNota(nota);
         this.nota = nota;
     }
@@ -141,7 +181,7 @@ public class Comentario {
         }
     }
 
-    private void ValidarFaixaDaNota(int nota){
+    private void ValidarFaixaDaNota(double nota){
         if(nota > 10 || nota < 0 ){
             throw new RuntimeException("A nota tem que estar entre a faixa de 0 a 10");
         }
