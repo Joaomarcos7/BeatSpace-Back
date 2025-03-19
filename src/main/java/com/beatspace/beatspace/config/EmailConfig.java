@@ -16,7 +16,7 @@ public class EmailConfig {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);  // Porta para STARTTLS
         mailSender.setUsername("jose.marcio@academico.ifpb.edu.br");
-        mailSender.setPassword("Ma87867431");
+        mailSender.setPassword("******");
 
         Properties properties = mailSender.getJavaMailProperties();
         properties.put("mail.transport.protocol", "smtp");

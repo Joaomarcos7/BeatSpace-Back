@@ -23,6 +23,9 @@ public class Resenha {
     @Column(nullable = false)
     private String autor;
 
+    @Column(nullable = true)
+    private String email;
+
     @Column(nullable = false)
     private String username;
 
@@ -55,12 +58,13 @@ public class Resenha {
         this.nota = nota;
     }
 
-    public Resenha(String texto, String autor,int nota,String data ,String parentId, String username, String userimg){
+    public Resenha(String texto, String autor,String email, int nota,String data ,String parentId, String username, String userimg){
         this.ValidarTamanhodoTexto(texto);
         this.ValidarFaixaDaNota(nota);
         this.ValidarFormatoData(data);
         this.texto = texto;
         this.autor = autor;
+        this.email = email;
         this.nota = nota;
         this.data = data;
         this.parentId = parentId;
@@ -74,6 +78,7 @@ public class Resenha {
                 this.id,
                 this.texto,
                 this.autor,
+                this.email,
                 this.username,
                 this.userimg,
                 this.nota,
@@ -152,6 +157,10 @@ public class Resenha {
     public String getAutor() {
         return autor;
     }
+
+    public String getEmail(){return email;}
+    public void setEmail(String email){this.email =  email;}
+
 
     public void setAutor(String autor) {
         this.autor = autor;
