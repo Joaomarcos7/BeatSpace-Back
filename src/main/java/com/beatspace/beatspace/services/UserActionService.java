@@ -4,7 +4,8 @@ import com.beatspace.beatspace.models.UserAction;
 import com.beatspace.beatspace.repository.UserActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -24,4 +25,9 @@ public class UserActionService {
     public List<UserAction> getUserActions(String userId) {
         return userActionRepository.findByuserIdOrderByTimestampDesc(userId);
     }
+    @Transactional
+    public void deleteUserAction(String userId, Long actionId) {
+        userActionRepository.deleteByUserIdAndId(userId, actionId);
+    }
+
 }
