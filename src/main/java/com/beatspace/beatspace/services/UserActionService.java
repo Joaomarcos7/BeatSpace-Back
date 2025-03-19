@@ -30,4 +30,9 @@ public class UserActionService {
         userActionRepository.deleteByUserIdAndId(userId, actionId);
     }
 
+    @Transactional
+    public void deleteAllUserActions(String userId) {
+        userActionRepository.deleteAllByUserId(userId);
+    }
+
 }

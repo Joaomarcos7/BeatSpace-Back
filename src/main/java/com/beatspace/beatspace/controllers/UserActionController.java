@@ -2,6 +2,7 @@ package com.beatspace.beatspace.controllers;
 import com.beatspace.beatspace.models.UserAction;
 import com.beatspace.beatspace.services.UserActionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,14 @@ public class UserActionController {
         userActionService.deleteUserAction(userId, actionId);
         System.out.println("User action deleted");
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUserActions(@PathVariable String userId) {
+        // Lógica para excluir as ações do usuário
+        userActionService.deleteAllUserActions(userId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }
