@@ -1,4 +1,4 @@
-package com.beatspace.beatspace.util;
+package com.beatspace.beatspace;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;

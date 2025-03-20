@@ -103,7 +103,6 @@ public class SpotifyController {
 
 
     @GetMapping("/albuns/new-releases")
-    @Cacheable(value = "newReleases",key = "'newReleases'")
     public String getAlbuns(@RequestHeader("Authorization") String token) throws IOException{
 
         Request request = new Request.Builder()
@@ -209,8 +208,6 @@ public class SpotifyController {
     }
 
     @GetMapping("/user/me")
-    @Cacheable(value = "currentUser", key = "'currentUser'")
-
     public String getCurrentUser(@RequestHeader("Authorization") String token) throws IOException{
 
         Request request = new Request.Builder()
