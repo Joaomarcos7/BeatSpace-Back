@@ -30,6 +30,9 @@ public class Resenha {
     private String userimg;
 
     @Column(nullable = false)
+    private String genre;
+
+    @Column(nullable = false)
     private double nota;
 
     @Column(nullable = false)
@@ -79,9 +82,9 @@ public class Resenha {
                 this.nota,
                 this.data,
                 this.parentId,
+                this.genre,
                 this.comentarios.stream().map(x->x.toComentarioResponse()).toList(),
-                this.likes != null ? this.likes.size() : 0 ,// Total de likes,
-                this.getLikes().stream().filter(x-> x.getUserId().equals(this.autor)).toList().size() > 0
+                this.likes.stream().map(x->x.toLikeResponse()).toList()
         );
     }
 
@@ -139,6 +142,14 @@ public class Resenha {
     public void setTexto(String texto) {
         this.ValidarTamanhodoTexto(texto);
         this.texto = texto;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public List<Like> getLikes() {

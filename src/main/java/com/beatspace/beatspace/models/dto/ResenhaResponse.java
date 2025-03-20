@@ -11,9 +11,10 @@ public record ResenhaResponse(
         double nota,
         String data,
         String parentId,
-        List<ComentarioResponse> comentarios, // Número total de comentários
-        int totalLikes, // Número total de likes
 
-        boolean liked //Já curtido ?
+        String genre,
+        List<ComentarioResponse> comentarios, // Número total de comentários
+
+        List<LikeResponse> likes
 ) {
 }

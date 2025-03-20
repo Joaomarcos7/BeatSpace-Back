@@ -15,6 +15,8 @@ import java.util.List;
 public interface ResenhaRepository extends JpaRepository<Resenha, Long> {
     List<Resenha> findByParentId(String id);
 
+    List<Resenha> findByAutor(String id);
+
     @Query("SELECT Count(c.likes) FROM Resenha c WHERE c.id = :id" )
     int getTotalLikesFromResenha(Long id);
 
@@ -27,6 +29,12 @@ public interface ResenhaRepository extends JpaRepository<Resenha, Long> {
     @Query("SELECT  new com.beatspace.beatspace.models.Comentarios.Resenha(c.parentId, AVG(c.nota)) FROM Resenha c GROUP BY c.parentId ORDER BY AVG(c.nota) DESC LIMIT 10")
     List<Resenha> getBestGrades();
 
+    @Query("SELECT  new com.beatspace.beatspace.models.Comentarios.Resenha(c.parentId, AVG(c.nota)) FROM Resenha c WHERE c.genre = :genre GROUP BY c.parentId ORDER BY AVG(c.nota) DESC  LIMIT 10")
+    List<Resenha> getBestGradesByGenre(@Param("genre") String genre);
+
     @Query("Select r from Resenha r order by size(r.likes) DESC LIMIT 10")
     List<Resenha> getResenhaMaisCurtidas();
+
+    @Query("Select distinct r.genre from Resenha r")
+    List<String> getGenres();
 }

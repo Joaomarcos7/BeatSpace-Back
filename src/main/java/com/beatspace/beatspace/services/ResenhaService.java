@@ -21,6 +21,10 @@ public class ResenhaService {
         return _ResenhaRepository.findAll().stream().map(x->x.toResenhaResponse()).toList();
     }
 
+    public List<ResenhaResponse> listarPorUsuario(String id){
+        return _ResenhaRepository.findByAutor(id).stream().map(x->x.toResenhaResponse()).toList();
+    }
+
     public Optional<Resenha> buscarPorId(Long id) {
         return _ResenhaRepository.findById(id);
     }
@@ -39,7 +43,12 @@ public class ResenhaService {
         return _ResenhaRepository.getAverageGrade(id);
     }
 
-    public List<ResenhaResponse> getBestGrades(){return _ResenhaRepository.getBestGrades().stream().map(x->x.toResenhaResponse()).toList();}
+    public List<ResenhaResponse> getBestGrades(String genre){
+        if(genre.equals("Todos")){
+            return _ResenhaRepository.getBestGrades().stream().map(x->x.toResenhaResponse()).toList();
+        }
+        return _ResenhaRepository.getBestGradesByGenre(genre).stream().map(x->x.toResenhaResponse()).toList();
+    }
 
     public int getTotalLikes(Long Resenha_id){
         return  _ResenhaRepository.getTotalLikesFromResenha(Resenha_id);
@@ -51,5 +60,10 @@ public class ResenhaService {
 
     public List<ResenhaResponse> getResenhaMaisCurtidas(){
         return this._ResenhaRepository.getResenhaMaisCurtidas().stream().map(x->x.toResenhaResponse()).toList();
+    }
+
+
+    public List<String> getGenres(){
+        return this._ResenhaRepository.getGenres();
     }
 }
