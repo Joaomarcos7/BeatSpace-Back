@@ -1,21 +1,23 @@
+# Etapa 1: Construção do JAR
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+# Etapa 2: Imagem final otimizada
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
 
-# Add Maintainer Info
-LABEL maintainer="your.email@example.com"
+# Usuário não root para segurança
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+# Copia o JAR gerado na etapa 1
+COPY --from=build /app/target/beatspace-0.0.1-SNAPSHOT.jar app.jar
 
-# Make port 8080 available to the world outside this container
+# Expõe a porta padrão do Spring Boot
 EXPOSE 8080
 
-# The application's jar file
-ARG JAR_FILE=target/beatspace-0.0.1-SNAPSHOT.jar
-
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+# Executa a aplicação
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
