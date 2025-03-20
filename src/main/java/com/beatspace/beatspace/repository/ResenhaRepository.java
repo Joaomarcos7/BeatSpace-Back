@@ -32,7 +32,7 @@ public interface ResenhaRepository extends JpaRepository<Resenha, Long> {
     @Query("SELECT  new com.beatspace.beatspace.models.Comentarios.Resenha(c.parentId, AVG(c.nota)) FROM Resenha c WHERE c.genre = :genre GROUP BY c.parentId ORDER BY AVG(c.nota) DESC  LIMIT 10")
     List<Resenha> getBestGradesByGenre(@Param("genre") String genre);
 
-    @Query("Select r from Resenha r order by size(r.likes) DESC LIMIT 10")
+    @Query("Select r from Resenha r where size(r.likes) > 0 order by size(r.likes) DESC LIMIT 10")
     List<Resenha> getResenhaMaisCurtidas();
 
     @Query("Select distinct r.genre from Resenha r")

@@ -3,6 +3,7 @@ package com.beatspace.beatspace.controllers;
 import com.beatspace.beatspace.models.Playlist.CreatePlaylistRequest;
 import com.beatspace.beatspace.models.Track.DeleteTrackRequest;
 import okhttp3.*;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -47,7 +48,7 @@ public class SpotifyController {
     }
 
     @PostMapping("/refresh-token")
-    public String getSpotifyRefreshToken(@RequestBody Map<String,String> requestBody) throws IOException{
+    public ResponseEntity<?> getSpotifyRefreshToken(@RequestBody Map<String,String> requestBody) throws IOException{
         String token = requestBody.get("refresh_token");
 
 
@@ -67,13 +68,16 @@ public class SpotifyController {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
 
         }
     }
 
     @PostMapping("/token")
-    public String getSpotifyToken ( @RequestBody Map<String, String> requestBody) throws IOException {
+    public ResponseEntity<?> getSpotifyToken ( @RequestBody Map<String, String> requestBody) throws IOException {
         String code = requestBody.get("code"); // Código enviado pelo frontend
 
 
@@ -96,14 +100,16 @@ public class SpotifyController {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            if (!response.isSuccessful()) {
+                return ResponseEntity.status(response.code()).body(response.body().string());
+            }
+            return ResponseEntity.ok(response.body().string());
 
         }
     }
 
 
     @GetMapping("/albuns/new-releases")
-    @Cacheable(value = "newReleases",key = "'newReleases'")
     public String getAlbuns(@RequestHeader("Authorization") String token) throws IOException{
 
         Request request = new Request.Builder()
@@ -119,7 +125,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/albuns/saved")
-    @Cacheable(value = "albunsSaved", key = "'albunsSaved'")
+    @Cacheable(value = "albunsSaved")
 
     public String getAlbunsSaved(@RequestHeader("Authorization") String token) throws IOException{
 
@@ -175,7 +181,7 @@ public class SpotifyController {
     
 
     @GetMapping("/tracks/top")
-    @Cacheable(value = "topTracks", key = "'topTracks'")
+    @Cacheable(value = "topTracks")
 
     public String getMyTopTracks(@RequestHeader("Authorization") String token) throws IOException{
 
@@ -192,7 +198,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/artists/top")
-    @Cacheable(value = "topArtists",key = "'topArtists'")
+    @Cacheable(value = "topArtists")
 
     public String getMyTopArtists(@RequestHeader("Authorization") String token) throws IOException{
 
@@ -209,8 +215,6 @@ public class SpotifyController {
     }
 
     @GetMapping("/user/me")
-    @Cacheable(value = "currentUser", key = "'currentUser'")
-
     public String getCurrentUser(@RequestHeader("Authorization") String token) throws IOException{
 
         Request request = new Request.Builder()
@@ -360,7 +364,7 @@ public class SpotifyController {
     }
 
     @GetMapping("user/me/playlists")
-    @Cacheable(value = "currentUserPlaylists",key = "'currentUserPlaylists'")
+    @Cacheable(value = "currentUserPlaylists")
 
     public String getCurrentUserPlaylists(@RequestHeader("Authorization") String token) throws IOException{
 

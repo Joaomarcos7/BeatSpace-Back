@@ -6,6 +6,7 @@ public record ResenhaResponse(
         Long id,
         String texto,
         String autor,
+        String email,
         String username,
         String userimg,
         double nota,

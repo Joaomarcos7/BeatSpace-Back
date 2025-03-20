@@ -3,6 +3,7 @@ package com.beatspace.beatspace.controllers;
 import com.beatspace.beatspace.models.Comentarios.Resenha;
 import com.beatspace.beatspace.models.dto.ResenhaResponse;
 import com.beatspace.beatspace.services.ResenhaService;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,9 +92,9 @@ public class ResenhaController {
         return  ResponseEntity.ok(this.ResenhaService.getCommentsByResenha(resenha_id));
     }
 
-    @GetMapping("/most-liked")
-    public ResponseEntity<?> getResenhaMaisCurtidas(){
-        return ResponseEntity.ok(this.ResenhaService.getResenhaMaisCurtidas());
+    @QueryMapping
+    public List<ResenhaResponse> getResenhasMaisCurtidas(){
+        return this.ResenhaService.getResenhaMaisCurtidas();
     }
 
 }
