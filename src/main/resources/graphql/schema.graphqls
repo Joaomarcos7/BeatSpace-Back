@@ -1,0 +1,30 @@
+type Resenha {
+    id: ID!
+    texto : String
+    autor : String
+    username : String
+    userimg : String
+    nota : Float
+    data : String
+    parentId : String
+    genre : String
+    comentarios : [Comentario]
+    likes : [Like]
+}
+
+type Comentario{
+    id : ID!
+    texto : String
+    autor : String
+    username : String
+    userimg : String
+}
+
+type Like {
+    id : ID!
+    userId : String
+}
+
+type Query {
+    getResenhasMaisCurtidas: [Resenha]
+}
