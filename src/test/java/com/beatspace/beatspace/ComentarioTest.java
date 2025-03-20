@@ -68,10 +68,16 @@ public class ComentarioTest {
     @Test
     public void deveriaLancarExcecaoParaDataNaoConvertivelAoConstruir(){
         Assertions.assertThrows(RuntimeException.class,() -> {new Resenha("teste teste teste","ophas" , "123456", 5, "2025-02-21T15:58:09.524Z" , "3123fg24312g5" , "Fulano" , "http://img.com.br");;});
+    }
+
+
+        @Test
+        public void deveriaLancarExcecaoParaEmailNaoValido(){
+            Assertions.assertThrows(RuntimeException.class,() -> {new Resenha("teste teste teste","ophas" ,"joaochaves", 5, "2025-02-21T15:58:09.524Z" , "3123fg24312g5" , "Fulano" , "http://img.com.br");});
+        }
+
 
     }
 
 
 
-
-}

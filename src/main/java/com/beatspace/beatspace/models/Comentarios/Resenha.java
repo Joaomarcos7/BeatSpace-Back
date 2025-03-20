@@ -8,6 +8,8 @@ import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "resenhas")
@@ -65,6 +67,7 @@ public class Resenha {
         this.ValidarTamanhodoTexto(texto);
         this.ValidarFaixaDaNota(nota);
         this.ValidarFormatoData(data);
+        this.ValidarEmail(email);
         this.texto = texto;
         this.autor = autor;
         this.email = email;
@@ -215,5 +218,13 @@ public class Resenha {
         }
     }
 
+    private void ValidarEmail(String email){
+        String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        Pattern pattern = Pattern.compile(EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()){
+            throw new RuntimeException("Email não é valido");
+        };
+    }
 
 }
