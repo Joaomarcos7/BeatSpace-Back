@@ -62,9 +62,19 @@ public class ResenhaController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<?> getByUser(@PathVariable("id") String id){
+        return ResponseEntity.ok(this.ResenhaService.listarPorUsuario(id));
+    }
+
+    @GetMapping("/genres")
+    public ResponseEntity<List<String>> getGenres(){
+        return ResponseEntity.ok(this.ResenhaService.getGenres());
+    }
+
     @GetMapping("/ranking")
-    public ResponseEntity<List<ResenhaResponse>> getRankings(){
-        return ResponseEntity.ok(ResenhaService.getBestGrades());
+    public ResponseEntity<List<ResenhaResponse>> getRankings(@RequestParam("genre") String genre){
+        return ResponseEntity.ok(ResenhaService.getBestGrades(genre));
     }
 
     @DeleteMapping("/{id}")

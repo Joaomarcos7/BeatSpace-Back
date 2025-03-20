@@ -2,6 +2,7 @@ package com.beatspace.beatspace.models;
 
 import com.beatspace.beatspace.models.Comentarios.Comentario;
 import com.beatspace.beatspace.models.Comentarios.Resenha;
+import com.beatspace.beatspace.models.dto.LikeResponse;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -29,6 +30,12 @@ public class Like {
         userId = userId;
     }
 
+    public LikeResponse toLikeResponse(){
+        return new LikeResponse(
+                this.id,
+                this.userId
+                );
+    }
 
     // Getters e Setters
 
